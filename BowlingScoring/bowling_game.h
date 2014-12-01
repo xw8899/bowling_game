@@ -27,9 +27,13 @@ public:
 	int get_score();
 	int frame_number();
 	void hit(int score);
+	int get_next_next_hit_score(int frame_number);
+	int get_next_hit_score(int frame_number);
+		 
+
 private:
 	bool _first_hit;
 	int  _frame_number;
-	FrameScore scores[11];
+	FrameScore scores[13];
 };
 
