@@ -30,7 +30,7 @@ TEST(BowlingGameTest, TestSimpleSpare)
 	bg.hit(3);
 	bg.hit(7);
 	bg.hit(3);
-	EXPECT_EQ(13, bg.get_score());
+	EXPECT_EQ(16, bg.get_score());
 }
 
 TEST(BowlingGameTest, TestSimpleFrameAfterSpare)
@@ -40,7 +40,7 @@ TEST(BowlingGameTest, TestSimpleFrameAfterSpare)
 	bg.hit(7);
 	bg.hit(3);
 	bg.hit(2);
-	EXPECT_EQ(13, bg.get_score());
+	EXPECT_EQ(18, bg.get_score());
 }
 
 TEST(BowlingGameTest, TestSimpleStrike)
@@ -72,11 +72,45 @@ TEST(BowlingGameTest, TestPerfectGame)
 TEST(BowlingGameTest, get_score_of_9_strike)
 {
 	BowlingGame bg = BowlingGame();
-	for (int i = 0; i < 9; i++ )
+	for (int i = 0; i < 11; i++ )
 	    bg.hit(10);
+	bg.hit(9);
+	EXPECT_EQ(299, bg.get_score());
+}
+
+TEST(BowlingGameTest, TestEndOfArray)
+{
+	BowlingGame bg = BowlingGame();
+	for (int i = 0; i < 9; i++)
+	{
+		bg.hit(0);
+		bg.hit(0);
+	}
+	bg.hit(2);
+	bg.hit(8);
+	bg.hit(10);
+	EXPECT_EQ(20, bg.get_score());
+}
+
+TEST(BowlingGameTest, TestHeartBreak)
+{
+	BowlingGame bg = BowlingGame();
+	for (int i = 0; i < 9; i++)
+		bg.hit(10);
 	bg.hit(5);
 	bg.hit(4);
 	EXPECT_EQ(263, bg.get_score());
+}
+
+TEST(BowlingGameTest, TestTenthSpare)
+{
+	BowlingGame bg = BowlingGame();
+	for (int i = 0; i < 9; i++)
+		bg.hit(10);
+	bg.hit(9);
+	bg.hit(1);
+	bg.hit(1);
+	EXPECT_EQ(270, bg.get_score());
 }
 
 int _tmain(int argc, _TCHAR* argv[])
