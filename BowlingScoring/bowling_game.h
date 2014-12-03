@@ -17,7 +17,7 @@ public:
 	int secord_score;
 	int spare_score;
 };
-
+#define MAX_FRAME_NUMBER 12
 class BowlingGame
 {
 public:
@@ -25,15 +25,18 @@ public:
 	~BowlingGame();
 public:
 	int get_score();
-	int frame_number();
 	void hit(int score);
-	int get_next_next_hit_score(int frame_number);
+private:
+	
+	int get_frame_number();
+	void fill_frame_score();
+	int get_next_to_next_hit_score(int frame_number);
 	int get_next_hit_score(int frame_number);
 		 
 
 private:
 	bool _first_hit;
 	int  _frame_number;
-	FrameScore scores[13];
+	FrameScore scores[MAX_FRAME_NUMBER+1];
 };
 

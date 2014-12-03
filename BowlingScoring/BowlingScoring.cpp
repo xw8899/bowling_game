@@ -113,6 +113,15 @@ TEST(BowlingGameTest, TestTenthSpare)
 	EXPECT_EQ(270, bg.get_score());
 }
 
+TEST(BowlingGameTest, TestAtWill)
+{
+	BowlingGame bg = BowlingGame();
+	bg.hit(10);
+	bg.hit(10);
+	bg.hit(5);
+	EXPECT_EQ(45, bg.get_score());
+}
+
 int _tmain(int argc, _TCHAR* argv[])
 {
 	testing::InitGoogleTest(&argc, argv);
