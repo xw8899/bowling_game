@@ -4,8 +4,11 @@
 
 BowlingGame::BowlingGame()
 {
-	_first_hit = true;
-	_frame_number = 1;
+	_hit_index = 0;
+	for (size_t i = 0; i < MAX_HIT_TIMES; i++)
+	{
+		_all_hits[i] = 0;
+	}
 }
 
 BowlingGame::~BowlingGame()
@@ -14,25 +17,9 @@ BowlingGame::~BowlingGame()
 
 void BowlingGame::hit(int score)
 {
-	if (_frame_number > MAX_FRAME_NUMBER)
-	{
-		printf("game over!\n");
+	if (_hit_index >= MAX_HIT_TIMES)
 		return;
-	}
-	if (_first_hit)
-	{
-		scores[_frame_number].first_score = score;
-		if (score == 10)
-			_frame_number++;
-		else
-			_first_hit = false;
-	}
-	else
-	{
-		scores[_frame_number].secord_score = score;
-		_first_hit = true;
-		_frame_number++;
-	}	
+	_all_hits[_hit_index++] = score;
 }
 
 int BowlingGame::get_score()
@@ -40,7 +27,7 @@ int BowlingGame::get_score()
 	fill_frame_score();
 
 	int total_score = 0;
-	for (int i = 1; i <= get_frame_number(); i++)
+	for (int i = 0; i < MAX_FRAME_NUMBER; i++)
 	{
 		total_score = total_score + scores[i].get_score();
 	}
@@ -49,47 +36,32 @@ int BowlingGame::get_score()
 
 void BowlingGame::fill_frame_score()
 {
-	for (int i = 1; i <= get_frame_number(); i++)
+	int hitIndex = 0;
+	for (int frameIndex = 0; frameIndex < MAX_FRAME_NUMBER; frameIndex++)
 	{
-		if (scores[i].is_strike())
+		if ( is_strike(hitIndex) )
 		{
-			scores[i].secord_score = get_next_hit_score(i);
-			scores[i].spare_score = get_next_to_next_hit_score(i);
+			scores[frameIndex].fillScore(10, _all_hits[hitIndex + 1], _all_hits[hitIndex + 2]);
+			hitIndex++;
 		}
-		else if (scores[i].is_spare())
+		else if ( is_spare(hitIndex) )
 		{
-			scores[i].spare_score = get_next_hit_score(i);
-		}
-	}
-}
-
-int BowlingGame::get_next_to_next_hit_score(int frame_number)
-{
-	if (frame_number <= get_frame_number())
-	{
-		if (scores[frame_number + 1].is_strike())
-		{
-			return scores[frame_number + 2].first_score;
+			scores[frameIndex].fillScore(_all_hits[hitIndex], _all_hits[hitIndex + 1], _all_hits[hitIndex + 2]);
+			hitIndex += 2;
 		}
 		else
 		{
-			return scores[frame_number + 1].secord_score;
-		}	
+			scores[frameIndex].fillScore(_all_hits[hitIndex], _all_hits[hitIndex + 1]);
+			hitIndex += 2;
+		}
 	}
-	return 0;
 }
 
-int BowlingGame::get_next_hit_score(int frame_number)
+bool BowlingGame::is_strike(int hitIndex)
 {
-	if (frame_number <= get_frame_number())
-	{
-		return scores[frame_number + 1].first_score;
-	}
-	return 0;
+	return (_all_hits[hitIndex] == 10);
 }
-
-int BowlingGame::get_frame_number()
+bool BowlingGame::is_spare(int hitIndex)
 {
-	if (_frame_number > 10) return 10;
-	return _frame_number;
+	return (_all_hits[hitIndex] + _all_hits[hitIndex + 1] == 10);
 }
